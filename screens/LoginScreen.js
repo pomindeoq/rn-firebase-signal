@@ -1,11 +1,22 @@
-import React, { useState, useLayoutEffect } from "react";
+import React, { useState, useLayoutEffect, useEffect } from "react";
 import { StyleSheet, Text, View, KeyboardAvoidingView } from "react-native";
 import { Button, Input, Image } from "react-native-elements";
 import { StatusBar } from "expo-status-bar";
+import { auth } from "../firebase";
+import HomeScreen from "./HomeScreen";
 
 const LoginScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged((authUser) => {
+      if (authUser) {
+        navigation.replace("Home");
+      }
+    });
+    return unsubscribe;
+  }, []);
 
   const signIn = () => {};
 
@@ -14,7 +25,7 @@ const LoginScreen = ({ navigation }) => {
       <StatusBar style="light" />
       <Image
         source={{
-          url:
+          uri:
             "https://blog.mozilla.org/internetcitizen/files/2018/08/signal-logo.png",
         }}
         style={{ width: 200, height: 200 }}
@@ -25,7 +36,7 @@ const LoginScreen = ({ navigation }) => {
           placeholder="Email"
           type="email"
           value={email}
-          onChangeText={(text) => setEmail(text)}
+          onChange={(text) => setEmail(text)}
         />
         <Input
           autoFocus

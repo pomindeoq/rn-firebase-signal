@@ -2,6 +2,7 @@ import React, { useState, useLayoutEffect } from "react";
 import { StyleSheet, View, KeyboardAvoidingView } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { Button, Input, Text } from "react-native-elements";
+import { auth } from "../firebase";
 
 const RegisterScreen = ({ navigation }) => {
   const [name, setName] = useState("");
@@ -15,7 +16,30 @@ const RegisterScreen = ({ navigation }) => {
     });
   }, [navigation]);
 
-  const register = () => {};
+  const register = () => {
+    console.log(email);
+    auth
+      .createUserWithEmailAndPassword(email, password)
+      .then((authUser) => {
+        authUser.user.updateProfile({
+          displayName: name,
+          photoURL:
+            imageUrl ||
+            "https://toppng.com/uploads/preview/roger-berry-avatar-placeholder-11562991561rbrfzlng6h.png",
+        });
+      })
+      .catch((error) => {
+        // Handle Errors here.
+        var errorCode = error.code;
+        var errorMessage = error.message;
+        if (errorCode == "auth/weak-password") {
+          alert("The password is too weak.");
+        } else {
+          alert(errorMessage, email);
+        }
+        console.log(error);
+      });
+  };
 
   return (
     <KeyboardAvoidingView behavior="padding" style={styles.container}>
@@ -35,7 +59,7 @@ const RegisterScreen = ({ navigation }) => {
           placeholder="Email"
           type="email"
           value={email}
-          onChange={(text) => setEmail(text)}
+          onChangeText={(text) => setEmail(text)}
         />
         <Input
           secureTextEntry
@@ -56,7 +80,7 @@ const RegisterScreen = ({ navigation }) => {
         style={styles.button}
         raised
         onPress={register}
-        title="Register"
+        title="Register user"
       />
       <View style={{ height: 100 }}></View>
     </KeyboardAvoidingView>
