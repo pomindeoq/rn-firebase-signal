@@ -17,7 +17,6 @@ const RegisterScreen = ({ navigation }) => {
   }, [navigation]);
 
   const register = () => {
-    console.log(email);
     auth
       .createUserWithEmailAndPassword(email, password)
       .then((authUser) => {
@@ -37,7 +36,7 @@ const RegisterScreen = ({ navigation }) => {
         } else {
           alert(errorMessage, email);
         }
-        console.log(error);
+        alert(error);
       });
   };
 

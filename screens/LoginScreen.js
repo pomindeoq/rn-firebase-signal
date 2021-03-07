@@ -11,10 +11,12 @@ const LoginScreen = ({ navigation }) => {
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((authUser) => {
+      console.log(authUser);
       if (authUser) {
         navigation.replace("Home");
       }
     });
+
     return unsubscribe;
   }, []);
 
@@ -40,7 +42,7 @@ const LoginScreen = ({ navigation }) => {
           placeholder="Email"
           type="email"
           value={email}
-          onChange={(text) => setEmail(text)}
+          onChangeText={(text) => setEmail(text)}
         />
         <Input
           autoFocus
@@ -52,9 +54,9 @@ const LoginScreen = ({ navigation }) => {
           onSubmitEditing={signIn}
         />
       </View>
-      <Button containerStyle={styles.button} onPress={signIn} title="Login" />
+      <Button style={styles.button} onPress={signIn} title="Login" />
       <Button
-        containerStyle={styles.button}
+        style={styles.button}
         onPress={() => {
           navigation.navigate("Register");
         }}
